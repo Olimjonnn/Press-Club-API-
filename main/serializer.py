@@ -50,12 +50,6 @@ class SafarlarSerializer(serializers.ModelSerializer):
         model = Safarlar
         fields = "__all__"
 
-class SafarTextSerializer(serializers.ModelSerializer):
-    video = SafarlarSerializer(read_only=True)
-    class Meta:
-        depth = 1
-        model = SafarText
-        fields = "__all__"
 
 class Category2Serializer(serializers.ModelSerializer):
     class Meta:

@@ -50,18 +50,16 @@ class City(models.Model):
     name = models.CharField(max_length=200)
 
 class Safarlar(models.Model):
-    c = models.ForeignKey(City, on_delete=models.CASCADE)
-    video = models.CharField(max_length=300)
-
-class SafarText(models.Model):
-    video = models.ForeignKey(Safarlar, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    video = models.FileField(upload_to="Safarlar/")
     title = models.CharField(max_length=200)
-    text = models.TextField()
+    text = models.CharField(max_length=400)
 
 class Category2(models.Model):
     name = models.CharField(max_length=200)
     
 class Members(models.Model):
+    category = models.ForeignKey(Category2, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='Members/')
     name = models.CharField(max_length=200)
     job = models.CharField(max_length=200)

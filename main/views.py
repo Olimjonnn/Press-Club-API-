@@ -1,6 +1,4 @@
-from os import access
-from unicodedata import category
-from aiohttp import request
+from tkinter.tix import DirTree
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -101,40 +99,19 @@ class SafarlarView(viewsets.ModelViewSet):
         Safarlar.objects.create(
             city_id = request.data['city'],
             video = request.data['video'],
+            title = request.data['title'],
+            text = request.data['text'],
         )
         return Response({"CREATED"})
     
-
-class SafarTextView(viewsets.ModelViewSet):
-    queryset = SafarText.objects.all()
-    serializer_class = SafarTextSerializer
-
     @action(['GET'], detail=False)
-    
     def new(self, request):
-        try:
-            video = request.GET.get('video')
-            sar = Safarlar.objects.get(id=video)
-            v = SafarText.objects.filter(sar=video.c.id)
-            a = SafarTextSerializer(v, many=True)
-            return Response(a.data)
+        city = request.GET.get("city")
+        ct = Safarlar.objects.filter(city_id=city)
+        c = SafarlarSerializer(ct , many=True)
+        return Response(c.data)
 
-        except Exception as arr:
-            data = {
-                "error":f"{arr}"
-            }
-            return Response(data)
-
-    def create(self, request):
-        try:
-            SafarText.objects.create(
-                video_id = request.data['video'],
-                title = request.data['title'],
-                text = request.data['text'],
-            )
-            return Response({"CREATED"})
-        except Exception as arr:
-            return Response(arr)
+    
 
 
 
@@ -147,14 +124,34 @@ class Category2View(viewsets.ModelViewSet):
 class MembersView(viewsets.ModelViewSet):
     queryset = Members.objects.all()
     serializer_class = MembersSerializer
+    
+    def create(self, request):
+        Members.objects.create(
+            category_id = request.data['category'],
+            image = request.FILES['image'],
+            name = request.data['name'],
+            job = request.data['job'],
+            text = request.data['text']
+        )
+        return Response("Created")
+
+    @action(['GET'], detail=False)
+    def fff(self, request):
+        category = request.GET.get("category")
+        cate = Members.objects.filter(category_id=category)
+        cat = MembersSerializer(cate, many=True)
+        return Response(cat.data)
+        
 
 
 class ChannelsView(viewsets.ModelViewSet):
     queryset = Channels.objects.all()
     serializer_class = ChannelsSerializer
 
+    http_method_names = ['get']
 
 class ConntectingView(viewsets.ModelViewSet):
     queryset = Conntecting.objects.all()
     serializer_class = ConntectingSerializer
 
+    http_method_names = ['post']
